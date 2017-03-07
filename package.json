@@ -1,0 +1,34 @@
+{
+  "name": "leveldb-express",
+  "version": "1.0.0",
+  "description": "leveldb-express provide databases by leveldb",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theerawutt53/leveldb-express.git"
+  },
+  "author": [
+    "Theerawut Thaweephattharawong",
+    "Phongphun Kijsanayothin"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/theerawutt53/leveldb-express.git",
+  "dependencies": {
+    "JSONStream": "^1.3.1",
+    "body-parser": "^1.17.1",
+    "bytewise": "^1.1.0",
+    "cors": "^2.8.1",
+    "express": "^4.15.2",
+    "express-authorization": "^1.0.0",
+    "express-session": "^1.15.1",
+    "fs": "0.0.1-security",
+    "level": "^1.6.0",
+    "leveldb-index": "^1.0.3",
+    "leveldb-log": "0.0.2",
+    "levelup": "^1.3.5",
+    "lodash.defaults": "^4.2.0",
+    "node-uuid": "^1.4.7",
+    "passport": "^0.3.2",
+    "path": "^0.12.7"
+  }
+}
