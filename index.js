@@ -30,6 +30,8 @@ leveldb.prototype.get = function(db, req, res) {
     if (req.query.limit) {
       var limit = parseInt(req.query.limit);            
       req.query.limit = limit ? limit : 50;
+    } else {
+      req.query.limit = 50;
     }
 
     db.createReadStream(req.query)
@@ -83,7 +85,7 @@ leveldb.prototype.putdata = function(db,req, res) {
   var _key = _key.replace(/-/g, '');
   var _value = req.body;
   delete _value.apikey;
-  db.put(_key, value, function(err) {
+  db.put(_key, _value, function(err) {
     if (err) {
       res.json({
         'ok': false,
@@ -92,7 +94,7 @@ leveldb.prototype.putdata = function(db,req, res) {
     } else {
       res.json({
         'ok': true,
-        'key': key
+        'key': _key
       });
     }
   });
@@ -109,7 +111,7 @@ leveldb.prototype.daletedata = function(db,req, res) {
     } else {
       res.json({
         'ok': true,
-        'key': key
+        'key': _key
       });
     }
   });
