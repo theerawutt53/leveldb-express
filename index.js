@@ -5,6 +5,9 @@ var sublevel = require('level-sublevel');
 var path = require('path');
 var express = require('express');
 var JSONStream = require('JSONStream');
+var through2 = require('through2');
+var request = require('request');
+var diff = require('changeset');
 
 function leveldb(config) {  
   var options = {
@@ -117,6 +120,35 @@ leveldb.prototype.daletedata = function(db,req, res) {
   });
 };
 
+leveldb.prototype.sync = function(db,req, res){
+  // {'url':'http://xxx.yyy/log','token':'JWT xxxx','start':'xx'}
+  var body = {'start':req.body.start};
+  var records = 0;
+  var last_sync = null;
+  request({
+    method:'GET',
+    url:req.body.url,
+    headers:{'Authorization':req.body.token},      
+    json:true,
+    body:body
+  })
+  .pipe(JSONStream.parse('*'))
+  .pipe(through2.obj(function(chunk,enc,cb) {            
+    try {            
+      last_sync = chunk.key;
+      var _value = diff.apply(chunk.value.changes,{});
+      var key = chunk.value.key;
+      records++;
+      db.put(key,_value,cb);
+    } catch(err) {      
+      cb();
+    };
+  }))
+  .on('finish',function() {
+    res.json({'records':records,'last_sync':last_sync});
+  });
+};
+
 var leveldb_express = function(config) {
   var router = express.Router();
   var db_controller = new leveldb(config);
@@ -125,6 +157,7 @@ var leveldb_express = function(config) {
   router.get('/log', db_controller.log.bind(null,db_controller.db));
   router.get('/compact', db_controller.compact.bind(null,db_controller.db));
   //POST METHOD
+  router.post('/sync',db_controller.sync.bind(null,db_controller.db));
   router.post('/query/:index', db_controller.query.bind(null,db_controller.db));
   router.post('/data/:id?', db_controller.putdata.bind(null,db_controller.db));
   //DELETE METHOD
