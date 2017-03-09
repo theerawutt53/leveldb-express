@@ -8,6 +8,7 @@ var JSONStream = require('JSONStream');
 var through2 = require('through2');
 var request = require('request');
 var diff = require('changeset');
+var uuid = require('node-uuid');
 
 function leveldb(config) {  
   var options = {

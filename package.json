@@ -1,6 +1,6 @@
 {
   "name": "leveldb-express",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "leveldb-express provide databases by leveldb",
   "main": "route/service_interface.js",
   "repository": {
