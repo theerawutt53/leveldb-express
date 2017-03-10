@@ -27,7 +27,6 @@ function leveldb(config) {
   }
 }
 
-
 leveldb.prototype.get = function(db, req, res) {    
   var key = req.params.id ? req.params.id : '';            
   if (key == '') {
@@ -54,7 +53,6 @@ leveldb.prototype.get = function(db, req, res) {
     })
   }
 };
-
 
 leveldb.prototype.log = function(db, req, res) {
   if (db.createLogStream) {
@@ -122,7 +120,7 @@ leveldb.prototype.daletedata = function(db,req, res) {
 };
 
 leveldb.prototype.sync = function(db,req, res){
-  // {'url':'http://xxx.yyy/log','token':'JWT xxxx','start':'xx'}
+  // {'url':'http://xxx.yyy/log/','token':'JWT xxxx','start':'xx'}
   var body = {'start':req.body.start};
   var records = 0;
   var last_sync = null;
