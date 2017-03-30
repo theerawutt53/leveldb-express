@@ -68,7 +68,7 @@ leveldb.prototype.log = function(db, req, res) {
     if (req.query.limit) {
       var limit = parseInt(req.query.limit);
       opt['limit'] = limit ? limit : 50;
-    
+    }
     db.createLogStream(opt)
       .pipe(JSONStream.stringify())
       .pipe(res);
