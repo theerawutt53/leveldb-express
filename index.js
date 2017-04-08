@@ -90,6 +90,12 @@ leveldb.prototype.compact = function(db, req, res) {
 
 leveldb.prototype.query = function(db, req, res) {
   var index = req.params.index;
+   if(req.body.match) {
+     req.body['start'] = req.body.match;
+     req.body['end'] = req.body.match.slice();
+     req.body['end'].push(undefined);
+     delete req.body['match'];
+  }
   db.indexes[index].createIndexStream(req.body)
     .pipe(JSONStream.stringify())
     .pipe(res);
