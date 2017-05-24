@@ -10,11 +10,11 @@ var request = require('request');
 var diff = require('changeset');
 var uuid = require('node-uuid');
 
-function leveldb(config) {  
+function leveldb(config) {
   var options = {
    'valueEncoding': 'json'
   };
-  var name = config.db.name;  
+  var name = config.db.name;
   var self=this;
   this.db = sublevel(levelup(path.join('./databases',name), options));
   this.db = levelindex(levellog(this.db));
@@ -27,11 +27,11 @@ function leveldb(config) {
   }
 }
 
-leveldb.prototype.get = function(db, req, res) {    
-  var key = req.params.id ? req.params.id : '';            
+leveldb.prototype.get = function(db, req, res) {
+  var key = req.params.id ? req.params.id : '';
   if (key == '') {
     if (req.query.limit) {
-      var limit = parseInt(req.query.limit);            
+      var limit = parseInt(req.query.limit);
       req.query.limit = limit ? limit : 50;
     } else {
       req.query.limit = 50;
@@ -120,7 +120,7 @@ leveldb.prototype.putdata = function(db,req, res) {
     }
   });
 };
-  
+
 leveldb.prototype.daletedata = function(db,req, res) {
   var _key = req.params.id;
   db.del(_key, function(err) {
@@ -146,19 +146,19 @@ leveldb.prototype.sync = function(db,req, res){
   request({
     method:'GET',
     url:req.body.url,
-    headers:{'Authorization':req.body.token},      
+    headers:{'Authorization':req.body.token},
     json:true,
     body:body
   })
   .pipe(JSONStream.parse('*'))
-  .pipe(through2.obj(function(chunk,enc,cb) {            
-    try {            
+  .pipe(through2.obj(function(chunk,enc,cb) {
+    try {
       last_sync = chunk.key;
       var _value = diff.apply(chunk.value.changes,{});
       var key = chunk.value.key;
       records++;
       db.put(key,_value,cb);
-    } catch(err) {      
+    } catch(err) {
       cb();
     };
   }))
@@ -171,6 +171,9 @@ var leveldb_express = function(config) {
   var router = express.Router();
   var db_controller = new leveldb(config);
   //GET METHOD
+  router.get('/index', function(req, res){
+    res.json(config.db);
+  });
   router.get('/data/:id?', db_controller.get.bind(null,db_controller.db));
   router.get('/log', db_controller.log.bind(null,db_controller.db));
   router.get('/compact', db_controller.compact.bind(null,db_controller.db));
