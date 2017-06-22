@@ -138,6 +138,23 @@ leveldb.prototype.daletedata = function(db,req, res) {
   });
 };
 
+leveldb.prototype.daletelog = function(db,req, res) {
+  var _key = req.params.id;
+  db.log.del(_key, function(err) {
+    if (err) {
+      res.json({
+        'ok': false,
+        'message': err
+      });
+    } else {
+      res.json({
+        'ok': true,
+        'key': _key
+      });
+    }
+  });
+};
+
 leveldb.prototype.sync = function(db,req, res){
   // {'url':'http://xxx.yyy/log/','token':'JWT xxxx','start':'xx'}
   var body = {'start':req.body.start};
@@ -180,6 +197,7 @@ var leveldb_express = function(config) {
   router.post('/data/:id?', db_controller.putdata.bind(null,db_controller.db));
   //DELETE METHOD
   router.delete('/data/:id?', db_controller.daletedata.bind(null,db_controller.db));
+  router.delete('/log/:id', db_controller.deletelog.bind(null,db_controller.db));
   return router;
 }
 
