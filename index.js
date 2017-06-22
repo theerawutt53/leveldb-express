@@ -138,7 +138,7 @@ leveldb.prototype.daletedata = function(db,req, res) {
   });
 };
 
-leveldb.prototype.daletelog = function(db,req, res) {
+leveldb.prototype.deletelog = function(db,req, res) {
   var _key = req.params.id;
   db.log.del(_key, function(err) {
     if (err) {
